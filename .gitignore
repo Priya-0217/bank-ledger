@@ -1,0 +1,26 @@
+### Node general ###
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Next.js ###
+.next/
+**/.next/
+out/
+
+### Builds ###
+dist/
+build/
+coverage/
+
+### Env files ###
+.env
+.env.*
+**/.env
+**/.env.*
+
+### OS ###
+.DS_Store
+Thumbs.db
