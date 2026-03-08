@@ -77,6 +77,7 @@ export default function AccountsPage() {
                 <div className="text-right text-sm">
                   <p className="text-emerald-400">Incoming ${incoming.toFixed(2)}</p>
                   <p className="text-emerald-300">Outgoing ${outgoing.toFixed(2)}</p>
+                  <p className="text-rose-400">Outgoing ${outgoing.toFixed(2)}</p>
                 </div>
               </article>
             )
