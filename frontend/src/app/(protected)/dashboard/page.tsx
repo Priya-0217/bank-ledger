@@ -68,6 +68,7 @@ export default function DashboardPage() {
 
       {loading && <div className="vault-card p-6">Loading...</div>}
       {!!error && <div className="vault-card p-6 text-emerald-300">{error}</div>}
+      {!!error && <div className="vault-card p-6 text-rose-400">{error}</div>}
 
       {!loading && !error && (
         <>
@@ -113,6 +114,7 @@ export default function DashboardPage() {
               <div className="space-y-3 p-4">
                 {accounts.map((acc) => (
                   <article key={acc._id} className="rounded-xl bg-emerald-900/10 p-3 ring-1 ring-emerald-900/30">
+                  <article key={acc._id} className="rounded-xl bg-white/5 p-3">
                     <p className="mono text-xs text-slate-400">{acc._id}</p>
                     <p className="mt-1 text-2xl font-semibold text-white">${(balances[acc._id] || 0).toFixed(2)}</p>
                   </article>
