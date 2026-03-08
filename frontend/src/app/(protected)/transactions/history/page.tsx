@@ -8,14 +8,24 @@ type Tx = {
   toAccount: string
   amount: number
   status: string
-  type: 'credit' | 'debit'
+  idempotencyKey?: string
+  direction?: 'incoming' | 'outgoing'
+  counterparty?: string
   createdAt: string
+}
+
+const statusStyles: Record<string, string> = {
+  completed: 'text-emerald-300',
+  pending: 'text-emerald-200',
+  failed: 'text-emerald-400',
+  reversed: 'text-emerald-300'
 }
 
 export default function HistoryPage() {
   const [tx, setTx] = useState<Tx[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     const load = async () => {
@@ -34,50 +44,64 @@ export default function HistoryPage() {
     load()
   }, [])
 
-  const rows = useMemo(() => tx.map(t => ({
-    ...t,
-    time: new Date(t.createdAt).toLocaleString()
-  })), [tx])
+  const filteredRows = useMemo(() => {
+    const q = query.toLowerCase().trim()
+    if (!q) return tx
+    return tx.filter((t) =>
+      t.counterparty?.toLowerCase().includes(q) ||
+      t.idempotencyKey?.toLowerCase().includes(q) ||
+      t.fromAccount.toLowerCase().includes(q) ||
+      t.toAccount.toLowerCase().includes(q)
+    )
+  }, [query, tx])
 
   return (
     <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Transaction History</h1>
-        <p className="text-sm text-slate-500">Latest activity</p>
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-4xl font-semibold text-white">Transactions</h1>
+          <p className="text-slate-400">Complete ledger of all financial activity</p>
+        </div>
+        <button className="vault-secondary-btn">Export CSV</button>
+      </header>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search transactions..." className="vault-input max-w-md" />
       </div>
-      {loading && <div className="card p-6">Loading...</div>}
-      {!!error && <div className="card p-6 text-red-600">{error}</div>}
+
+      {loading && <div className="vault-card p-6">Loading...</div>}
+      {!!error && <div className="vault-card p-6 text-emerald-300">{error}</div>}
+
       {!loading && !error && (
-        <div className="card">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left border-b border-neutral-200">
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">From</th>
-                  <th className="px-4 py-3">To</th>
-                  <th className="px-4 py-3">Amount</th>
-                  <th className="px-4 py-3">Status</th>
+        <div className="vault-card overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/10 text-left text-slate-500">
+                <th className="px-4 py-3">Transaction</th>
+                <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Idempotency Key</th>
+                <th className="px-4 py-3 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredRows.map((t) => (
+                <tr key={t._id} className="border-b border-white/5 hover:bg-emerald-900/10">
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-white">{t.counterparty || 'Transfer'}</p>
+                    <p className="mono text-xs text-slate-500">TXN-{t._id.slice(-4)}</p>
+                  </td>
+                  <td className="px-4 py-3 text-slate-400">{new Date(t.createdAt).toLocaleString()}</td>
+                  <td className={`px-4 py-3 capitalize ${statusStyles[t.status] || 'text-slate-300'}`}>{t.status}</td>
+                  <td className="mono px-4 py-3 text-xs text-slate-500">{t.idempotencyKey || '-'}</td>
+                  <td className={`mono px-4 py-3 text-right text-lg font-semibold ${t.direction === 'incoming' ? 'text-emerald-400' : 'text-emerald-300'}`}>{t.direction === 'incoming' ? '+' : '-'}${t.amount.toFixed(2)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {rows.map(t => (
-                  <tr key={t._id} className="border-b last:border-b-0 border-neutral-100 hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-3 whitespace-nowrap text-slate-700">{t.time}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-600">{t.fromAccount}</td>
-                    <td className="px-4 py-3 font-mono text-xs text-slate-600">{t.toAccount}</td>
-                    <td className="px-4 py-3 font-semibold text-slate-900">${t.amount.toFixed(2)}</td>
-                    <td className="px-4 py-3">
-                      <span className="px-2 py-0.5 rounded-full text-xs bg-indigo-50 text-indigo-700 capitalize">{t.status}</span>
-                    </td>
-                  </tr>
-                ))}
-                {rows.length === 0 && (
-                  <tr><td colSpan={5} className="px-4 py-6 text-neutral-500">No transactions yet</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+              ))}
+              {!filteredRows.length && (
+                <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-500">No transactions found.</td></tr>
+              )}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
