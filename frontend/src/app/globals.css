@@ -4,32 +4,53 @@
 
 html, body, :root {
   height: 100%;
+  background: #020814;
 }
 
-.container {
-  @apply max-w-7xl mx-auto px-6 lg:px-8;
+body {
+  @apply bg-[#020814] text-slate-200;
 }
 
-.card {
-  @apply bg-white rounded-2xl shadow-lg border border-neutral-100;
+.vault-app {
+  @apply flex min-h-screen bg-[#020814];
 }
 
-.btn {
-  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200;
+.vault-sidebar {
+  @apply hidden md:flex md:w-64 min-h-screen flex-col justify-between border-r border-emerald-900/40 bg-[#030a16] p-3;
 }
 
-.btn-primary {
-  @apply btn bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm;
+.vault-main {
+  @apply flex-1 min-h-screen bg-[#020814] p-6 text-slate-200 md:p-8;
 }
 
-.btn-secondary {
-  @apply btn bg-neutral-100 hover:bg-neutral-200;
+.vault-nav-link {
+  @apply flex items-center justify-between rounded-xl px-4 py-3 text-sm text-slate-300 transition-colors hover:bg-emerald-400/10 hover:text-emerald-200;
 }
 
-.nav-link {
-  @apply text-sm text-slate-700 hover:text-slate-900 transition-colors;
+.vault-nav-link.is-active {
+  @apply bg-emerald-400/10 text-emerald-100 ring-1 ring-emerald-400/20;
 }
 
-.grad-card {
-  @apply bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-lg;
+.vault-card {
+  @apply rounded-2xl border border-emerald-900/40 bg-[#040c1b] shadow-[0_0_0_1px_rgba(16,185,129,0.08),0_20px_40px_rgba(0,0,0,0.45)];
+}
+
+.vault-input {
+  @apply w-full rounded-xl border border-emerald-900/40 bg-[#0b1324] px-3 py-2.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/30;
+}
+
+.vault-primary-btn {
+  @apply inline-flex items-center justify-center rounded-xl bg-[#72d3a3] px-4 py-2.5 text-sm font-semibold text-[#042313] transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.vault-secondary-btn {
+  @apply inline-flex items-center justify-center rounded-xl border border-emerald-900/40 bg-emerald-900/10 px-4 py-2.5 text-sm font-medium text-emerald-100 transition hover:bg-emerald-900/20;
+}
+
+.metric-card {
+  @apply vault-card p-5;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
