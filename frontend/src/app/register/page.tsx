@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import api from '@/lib/axios'
@@ -31,19 +32,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gradient-to-b from-slate-25 to-white">
-      <form onSubmit={onSubmit} className="card p-8 w-full max-w-md space-y-6">
-        <div className="flex items-center gap-2">
-          <Logo size={24} />
-          <h1 className="text-2xl font-semibold">Create account</h1>
-          {error && <p className="text-sm text-red-600">{error}</p>}
-        </div>
-        <div className="space-y-3">
-          <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Full name" className="w-full rounded-lg border border-neutral-300 px-3 py-2 bg-white" required />
-          <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" className="w-full rounded-lg border border-neutral-300 px-3 py-2 bg-white" required />
-          <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" className="w-full rounded-lg border border-neutral-300 px-3 py-2 bg-white" required />
-        </div>
-        <button disabled={loading} className="btn-primary w-full">{loading ? 'Creating...' : 'Create account'}</button>
+    <main className="flex min-h-screen items-center justify-center bg-[#020814] p-6">
+      <form onSubmit={onSubmit} className="vault-card w-full max-w-xl space-y-4 p-8 text-white">
+        <div className="flex items-center gap-2"><Logo size={28} /><h1 className="text-3xl font-semibold">Create your Vault account</h1></div>
+        {error && <p className="text-sm text-rose-400">{error}</p>}
+        <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Full name" className="vault-input" required />
+        <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" className="vault-input" required />
+        <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" className="vault-input" required />
+        <button disabled={loading} className="vault-primary-btn w-full">{loading ? 'Creating...' : 'Create account'}</button>
+        <p className="text-center text-slate-400">Already have an account? <Link href="/login" className="text-[#72d3a3]">Sign in</Link></p>
       </form>
     </main>
   )
