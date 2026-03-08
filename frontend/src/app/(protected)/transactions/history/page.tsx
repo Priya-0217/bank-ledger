@@ -15,10 +15,10 @@ type Tx = {
 }
 
 const statusStyles: Record<string, string> = {
-  completed: 'text-emerald-400',
-  pending: 'text-amber-300',
-  failed: 'text-rose-400',
-  reversed: 'text-orange-400'
+  completed: 'text-emerald-300',
+  pending: 'text-emerald-200',
+  failed: 'text-emerald-400',
+  reversed: 'text-emerald-300'
 }
 
 export default function HistoryPage() {
@@ -70,7 +70,7 @@ export default function HistoryPage() {
       </div>
 
       {loading && <div className="vault-card p-6">Loading...</div>}
-      {!!error && <div className="vault-card p-6 text-rose-400">{error}</div>}
+      {!!error && <div className="vault-card p-6 text-emerald-300">{error}</div>}
 
       {!loading && !error && (
         <div className="vault-card overflow-x-auto">
@@ -86,7 +86,7 @@ export default function HistoryPage() {
             </thead>
             <tbody>
               {filteredRows.map((t) => (
-                <tr key={t._id} className="border-b border-white/5 hover:bg-white/[0.03]">
+                <tr key={t._id} className="border-b border-white/5 hover:bg-emerald-900/10">
                   <td className="px-4 py-3">
                     <p className="font-medium text-white">{t.counterparty || 'Transfer'}</p>
                     <p className="mono text-xs text-slate-500">TXN-{t._id.slice(-4)}</p>
@@ -94,7 +94,7 @@ export default function HistoryPage() {
                   <td className="px-4 py-3 text-slate-400">{new Date(t.createdAt).toLocaleString()}</td>
                   <td className={`px-4 py-3 capitalize ${statusStyles[t.status] || 'text-slate-300'}`}>{t.status}</td>
                   <td className="mono px-4 py-3 text-xs text-slate-500">{t.idempotencyKey || '-'}</td>
-                  <td className={`mono px-4 py-3 text-right text-lg font-semibold ${t.direction === 'incoming' ? 'text-emerald-400' : 'text-rose-400'}`}>{t.direction === 'incoming' ? '+' : '-'}${t.amount.toFixed(2)}</td>
+                  <td className={`mono px-4 py-3 text-right text-lg font-semibold ${t.direction === 'incoming' ? 'text-emerald-400' : 'text-emerald-300'}`}>{t.direction === 'incoming' ? '+' : '-'}${t.amount.toFixed(2)}</td>
                 </tr>
               ))}
               {!filteredRows.length && (

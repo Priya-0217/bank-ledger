@@ -29,19 +29,19 @@ export default function SettingsPage() {
         <h2 className="text-2xl font-semibold text-white">Security</h2>
         <div className="mt-4 space-y-3">
           {items.map((item, idx) => (
-            <div key={item} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
+            <div key={item} className="flex items-center justify-between rounded-xl bg-emerald-900/10 px-4 py-3">
               <p className="text-slate-200">{item}</p>
-              <span className={`h-6 w-11 rounded-full ${idx % 2 === 0 ? 'bg-emerald-400/90' : 'bg-white/20'}`} />
+              <span className={`h-6 w-11 rounded-full ${idx % 2 === 0 ? 'bg-emerald-400/90' : 'bg-emerald-900/40'}`} />
             </div>
           ))}
         </div>
       </section>
 
-      <section className="vault-card border border-rose-500/30 p-6">
-        <h2 className="text-2xl font-semibold text-rose-400">Danger Zone</h2>
+      <section className="vault-card border border-emerald-900/40 p-6">
+        <h2 className="text-2xl font-semibold text-emerald-300">Danger Zone</h2>
         <p className="mt-1 text-slate-400">Irreversible actions on your account</p>
         <div className="mt-4 flex gap-2">
-          <button className="vault-secondary-btn border-rose-500/40 text-rose-300">Close Account</button>
+          <button className="vault-secondary-btn border-emerald-900/40 text-emerald-200">Close Account</button>
           <button className="vault-secondary-btn">Export All Data</button>
         </div>
       </section>

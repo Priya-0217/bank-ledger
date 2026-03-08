@@ -91,7 +91,7 @@ export default function NewTransactionPage() {
           <h2 className="text-lg font-semibold text-white">Quick Transfer</h2>
           <div className="mt-3 space-y-2">
             {accounts.slice(0, 3).map((acc) => (
-              <button key={acc._id} onClick={() => setToAccount(acc._id)} className="flex w-full items-center justify-between rounded-xl bg-white/5 px-3 py-2 text-left hover:bg-white/10">
+              <button key={acc._id} onClick={() => setToAccount(acc._id)} className="flex w-full items-center justify-between rounded-xl bg-emerald-900/10 px-3 py-2 text-left hover:bg-emerald-900/20">
                 <span className="mono text-xs text-slate-300">{acc._id.slice(-8)}</span>
                 <span className="text-slate-500">→</span>
               </button>
@@ -108,7 +108,7 @@ export default function NewTransactionPage() {
                   <p className="text-sm text-slate-200">{item.counterparty || 'Transfer'}</p>
                   <p className="text-xs text-slate-500">{new Date(item.createdAt).toLocaleDateString()}</p>
                 </div>
-                <span className={`mono text-sm ${item.direction === 'incoming' ? 'text-emerald-400' : 'text-rose-400'}`}>{item.direction === 'incoming' ? '+' : '-'}${item.amount.toFixed(2)}</span>
+                <span className={`mono text-sm ${item.direction === 'incoming' ? 'text-emerald-400' : 'text-emerald-300'}`}>{item.direction === 'incoming' ? '+' : '-'}${item.amount.toFixed(2)}</span>
               </div>
             ))}
           </div>

@@ -35,7 +35,7 @@ export default function RegisterPage() {
     <main className="flex min-h-screen items-center justify-center bg-[#020814] p-6">
       <form onSubmit={onSubmit} className="vault-card w-full max-w-xl space-y-4 p-8 text-white">
         <div className="flex items-center gap-2"><Logo size={28} /><h1 className="text-3xl font-semibold">Create your Vault account</h1></div>
-        {error && <p className="text-sm text-rose-400">{error}</p>}
+        {error && <p className="text-sm text-emerald-300">{error}</p>}
         <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Full name" className="vault-input" required />
         <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" className="vault-input" required />
         <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" className="vault-input" required />

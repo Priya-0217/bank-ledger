@@ -44,7 +44,7 @@ export default function LoginPage() {
         <form onSubmit={onSubmit} className="vault-card w-full max-w-xl p-8 space-y-5">
           <h2 className="text-4xl font-semibold">Welcome back</h2>
           <p className="text-slate-400">Sign in to your ledger</p>
-          {error && <p className="text-sm text-rose-400">{error}</p>}
+          {error && <p className="text-sm text-emerald-300">{error}</p>}
           <div>
             <label className="mb-1 block text-xs uppercase text-slate-400">Email</label>
             <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="you@company.com" className="vault-input" required />

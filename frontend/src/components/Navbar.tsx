@@ -46,7 +46,7 @@ export default function Navbar() {
         </nav>
       </div>
 
-      <div className="space-y-3 border-t border-white/10 px-3 py-4">
+      <div className="space-y-3 border-t border-emerald-900/40 px-3 py-4">
         <p className="text-xs text-slate-400">john@vault.com</p>
         <button onClick={logout} className="vault-secondary-btn w-full">Logout</button>
       </div>
