@@ -35,6 +35,18 @@ async function createTransaction(req, res) {
         })
     }
 
+    if (!Number.isFinite(amount) || amount <= 0) {
+        return res.status(400).json({
+            message: "amount must be a valid number greater than 0"
+        })
+    }
+
+    if (String(fromAccount) === String(toAccount)) {
+        return res.status(400).json({
+            message: "fromAccount and toAccount cannot be the same"
+        })
+    }
+
     const fromUserAccount = await accountModel.findOne({
         _id: fromAccount,
     })
@@ -46,6 +58,13 @@ async function createTransaction(req, res) {
     if (!fromUserAccount || !toUserAccount) {
         return res.status(400).json({
             message: "Invalid fromAccount or toAccount"
+        })
+    }
+
+    const requestUserId = String(req.user._id)
+    if (String(fromUserAccount.user) !== requestUserId || String(toUserAccount.user) !== requestUserId) {
+        return res.status(403).json({
+            message: "You can only transfer between your own accounts"
         })
     }
 
@@ -107,13 +126,14 @@ async function createTransaction(req, res) {
     }
 
     let transaction;
+    let session;
     try {
 
 
         /**
          * 5. Create transaction (PENDING)
          */
-        const session = await mongoose.startSession()
+        session = await mongoose.startSession()
         session.startTransaction()
 
         transaction = (await transactionModel.create([ {
@@ -125,7 +145,7 @@ async function createTransaction(req, res) {
             type: "credit"
         } ], { session }))[ 0 ]
 
-        const debitLedgerEntry = await ledgerModel.create([ {
+        await ledgerModel.create([ {
             account: fromAccount,
             amount: amount,
             transaction: transaction._id,
@@ -136,7 +156,7 @@ async function createTransaction(req, res) {
             return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
         })()
 
-        const creditLedgerEntry = await ledgerModel.create([ {
+        await ledgerModel.create([ {
             account: toAccount,
             amount: amount,
             transaction: transaction._id,
@@ -153,6 +173,10 @@ async function createTransaction(req, res) {
         await session.commitTransaction()
         session.endSession()
     } catch (error) {
+        if (session) {
+            await session.abortTransaction()
+            session.endSession()
+        }
 
         return res.status(400).json({
             message: "Transaction is Pending due to some issue, please retry after sometime",
@@ -187,13 +211,28 @@ async function getUserTransactions(req, res) {
     if (accountIds.length === 0) {
         return res.status(200).json({ transactions: [] })
     }
+
+    const accountIdSet = new Set(accountIds.map((id) => String(id)))
+
     const transactions = await transactionModel.find({
         $or: [
             { fromAccount: { $in: accountIds } },
             { toAccount: { $in: accountIds } }
         ]
-    }).sort({ createdAt: -1 }).limit(100)
-    return res.status(200).json({ transactions })
+    }).sort({ createdAt: -1 }).limit(100).lean()
+
+    const normalizedTransactions = transactions.map((transaction) => {
+        const isOutgoing = accountIdSet.has(String(transaction.fromAccount))
+        const counterparty = isOutgoing ? String(transaction.toAccount) : String(transaction.fromAccount)
+        return {
+            ...transaction,
+            direction: isOutgoing ? "outgoing" : "incoming",
+            counterparty,
+            signedAmount: isOutgoing ? -Math.abs(transaction.amount) : Math.abs(transaction.amount)
+        }
+    })
+
+    return res.status(200).json({ transactions: normalizedTransactions })
 }
 async function createInitialFundsTransaction(req, res) {
     let body = req.body || {}
