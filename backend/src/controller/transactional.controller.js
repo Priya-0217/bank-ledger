@@ -271,9 +271,69 @@ async function createInitialFundsTransaction(req, res) {
 
 }
 
+/**
+ * - Deposit funds into an account (owner only)
+ * - POST /api/transaction/deposit
+ * Body: { toAccount, amount, idempotencyKey }
+ */
+async function depositFunds(req, res) {
+    let body = req.body || {}
+    if (typeof body === "string") {
+        try { body = JSON.parse(body) } catch { body = {} }
+    }
+    const toAccount = body.toAccount || body.toAccountId
+    const idempotencyKey = body.idempotencyKey || body.idempotentkey
+    const amount = typeof body.amount === "number" ? body.amount : Number(body.amount)
+
+    if (!toAccount || !amount || !idempotencyKey) {
+        return res.status(400).json({
+            message: "toAccount, amount and idempotencyKey are required"
+        })
+    }
+
+    const account = await accountModel.findOne({ _id: toAccount, user: req.user._id })
+    if (!account) {
+        return res.status(404).json({ message: "account not found" })
+    }
+
+    const exists = await transactionModel.findOne({ idempotencyKey })
+    if (exists) {
+        return res.status(200).json({ message: "Deposit already processed", transaction: exists })
+    }
+
+    const session = await mongoose.startSession()
+    session.startTransaction()
+    try {
+        const tx = await transactionModel.create([{
+            fromAccount: toAccount,
+            toAccount,
+            amount,
+            idempotencyKey,
+            status: "completed",
+            type: "credit"
+        }], { session })
+
+        await ledgerModel.create([{
+            account: toAccount,
+            amount,
+            transaction: tx[0]._id,
+            type: "credit"
+        }], { session })
+
+        await session.commitTransaction()
+        session.endSession()
+        return res.status(201).json({ message: "Deposit successful", transaction: tx[0] })
+    } catch (e) {
+        await session.abortTransaction().catch(() => {})
+        session.endSession()
+        return res.status(500).json({ message: "Deposit failed" })
+    }
+}
+
 module.exports = {
     createTransaction,
     createInitialFundsTransaction,
     createinitialFunds: createInitialFundsTransaction,
-    getUserTransactions
+    getUserTransactions,
+    depositFunds
 }

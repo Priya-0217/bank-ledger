@@ -11,25 +11,30 @@ html, body, :root {
 }
 
 .card {
-  @apply bg-white rounded-2xl shadow-lg border border-neutral-100;
+  @apply bg-white rounded-2xl shadow-lg border border-neutral-100 dark:bg-neutral-900 dark:border-neutral-800;
 }
 
 .btn {
-  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200;
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 hover:-translate-y-0.5;
 }
 
 .btn-primary {
-  @apply btn bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm;
+  @apply btn bg-primary-600 text-white hover:bg-primary-700 shadow-sm;
 }
 
 .btn-secondary {
-  @apply btn bg-neutral-100 hover:bg-neutral-200;
+  @apply btn bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100;
 }
 
 .nav-link {
-  @apply text-sm text-slate-700 hover:text-slate-900 transition-colors;
+  @apply text-sm text-slate-700 hover:text-slate-900 transition-colors dark:text-neutral-300 dark:hover:text-white;
 }
 
 .grad-card {
-  @apply bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-lg;
+  @apply bg-gradient-to-br from-primary-700 to-primary-600 text-white shadow-lg;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
 }

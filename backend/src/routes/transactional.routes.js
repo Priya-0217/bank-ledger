@@ -9,6 +9,7 @@ router.post("/initial-funds", systemAuthMiddleware, transactionalController.crea
 // Backward-compatible aliases
 router.post("/system/initial_funds", systemAuthMiddleware, transactionalController.createinitialFunds)
 router.post("/system/initial-funds", systemAuthMiddleware, transactionalController.createinitialFunds)
+router.post("/deposit", authMiddleware, transactionalController.depositFunds)
 router.get("/history", authMiddleware, transactionalController.getUserTransactions)
 
 module.exports = router

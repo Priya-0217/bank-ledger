@@ -11,5 +11,6 @@ router.post("/",authMiddleware,accountController.createAccount)
 router.get("/",authMiddleware,accountController.getAccounts)
 
 router.get("/balance/:accountId",authMiddleware,accountController.getBalance)
+router.delete("/:accountId",authMiddleware,accountController.closeAccount)
 
 module.exports = router

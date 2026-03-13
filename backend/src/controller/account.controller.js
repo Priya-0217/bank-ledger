@@ -38,8 +38,34 @@ async function getBalance(req, res) {
         accountId: account._id
     })
 }
+async function closeAccount(req, res){
+    const {user} = req
+    const {accountId} = req.params
+    const account = await accountModel.findOne({
+        _id:accountId,
+        user:user._id
+    })
+    if(!account){
+        return res.status(404).json({
+            message:"account not found"
+        })
+    }
+    const balance = await account.getBalancedata()
+    if(balance !== 0){
+        return res.status(400).json({
+            message:"Cannot delete account with non‑zero balance"
+        })
+    }
+    account.status = "closed"
+    await account.save()
+    return res.status(200).json({
+        message:"Account closed",
+        accountId: account._id
+    })
+}
 module.exports = {
     createAccount,
     getAccounts,
-    getBalance
+    getBalance,
+    closeAccount
 }

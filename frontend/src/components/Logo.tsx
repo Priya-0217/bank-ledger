@@ -3,8 +3,8 @@ export default function Logo({ size = 28 }: { size?: number }) {
     <svg width={size} height={size} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className="rounded-lg">
       <defs>
         <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#4f46e5" />
-          <stop offset="100%" stopColor="#6366f1" />
+          <stop offset="0%" stopColor="#059669" />
+          <stop offset="100%" stopColor="#10b981" />
         </linearGradient>
       </defs>
       <rect x="0" y="0" width="48" height="48" rx="12" fill="url(#g)" />
