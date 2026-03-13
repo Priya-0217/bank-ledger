@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { getToken, getUser, type AuthUser } from '@/lib/auth'
+import { getToken, getUser, clearToken, type AuthUser } from '@/lib/auth'
 import Sidebar from '@/components/Sidebar'
 import ThemeToggle from '@/components/ThemeToggle'
+import api from '@/lib/axios'
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -29,6 +30,17 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
               <div className="flex items-center gap-3">
                 {user && <div className="hidden sm:block text-xs text-neutral-500 dark:text-neutral-400">{user.email}</div>}
                 <ThemeToggle />
+                <button
+                  onClick={async () => {
+                    try { await api.post('/auth/logout') } catch {}
+                    clearToken()
+                    router.replace('/login')
+                  }}
+                  className="btn-ghost"
+                  title="Logout"
+                >
+                  Logout
+                </button>
               </div>
             </div>
           </header>

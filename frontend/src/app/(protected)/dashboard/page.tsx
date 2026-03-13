@@ -23,7 +23,8 @@ export default function DashboardPage() {
     try {
       const res = await api.get('/account')
       const list: Account[] = res.data?.accounts || []
-      setAccounts(list)
+      const activeOnly = list.filter(a => a.status !== 'closed')
+      setAccounts(activeOnly)
       const fetched: Record<string, number> = {}
       for (const acc of list) {
         try {
@@ -149,7 +150,14 @@ export default function DashboardPage() {
               <div className="text-xs opacity-90 font-mono break-all">{acc._id}</div>
               <div className="mt-4 flex items-center gap-2">
                 <button onClick={() => setDepositFor(acc._id)} className="btn-success hover:shadow-soft" title="Add funds to this account">Add Funds</button>
-                <button onClick={() => removeAccount(acc._id)} className="btn-danger hover:shadow-soft" title="Close this account">Delete</button>
+                <button
+                  onClick={() => removeAccount(acc._id)}
+                  className="btn-danger hover:shadow-soft"
+                  disabled={(balances[acc._id] || 0) !== 0}
+                  title={(balances[acc._id] || 0) === 0 ? 'Close this account' : 'Balance must be zero to delete'}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
