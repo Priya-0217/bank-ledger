@@ -12,6 +12,9 @@ Modern full‑stack banking ledger with secure auth, transfers, idempotent trans
 - Email (optional): Nodemailer (Gmail OAuth2)
 - Deployment: Render (Web Services), `render.yaml` blueprint
 
+- <img width="2836" height="1454" alt="image" src="https://github.com/user-attachments/assets/b59b6e5e-53ea-495d-a25e-8675521deadb" />
+
+
 ## Monorepo Layout
 
 - backend/ — Express API (`server.js`, routes under `src/`)
