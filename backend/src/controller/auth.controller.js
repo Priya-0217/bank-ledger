@@ -10,36 +10,66 @@ const tokenBlackListModel = require("../modal/blacklist.modal")
 async function userRegisterController(req, res) {
     const { email, password, name } = req.body
 
-    const isExists = await userModel.findOne({
-        email: email
-    })
-
-    if (isExists) {
-        return res.status(422).json({
-            message: "User already exists with email.",
+    if (!name || !email || !password) {
+        return res.status(400).json({
+            message: "name, email and password are required",
             status: "failed"
         })
     }
 
-    const user = await userModel.create({
-        email, password, name
-    })
+    try {
+        const normalizedEmail = String(email).trim().toLowerCase()
+        const isExists = await userModel.findOne({ email: normalizedEmail })
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" })
+        if (isExists) {
+            return res.status(422).json({
+                message: "User already exists with this email. Please login instead.",
+                status: "failed"
+            })
+        }
 
-    res.cookie("token", token)
+        const user = await userModel.create({
+            email: normalizedEmail,
+            password,
+            name: String(name).trim()
+        })
 
-    res.status(201).json({
-        user: {
-            _id: user._id,
-            email: user.email,
-            name: user.name
-        },
-        token
-    })
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" })
 
-    if (emailService.sendRegistrationemail) {
-      try { await emailService.sendRegistrationemail(user.email, user.name) } catch {}
+        res.cookie("token", token)
+
+        res.status(201).json({
+            user: {
+                _id: user._id,
+                email: user.email,
+                name: user.name
+            },
+            token
+        })
+
+        if (emailService.sendRegistrationemail) {
+          try { await emailService.sendRegistrationemail(user.email, user.name) } catch {}
+        }
+    } catch (error) {
+        if (error?.code === 11000) {
+            return res.status(422).json({
+                message: "User already exists with this email. Please login instead.",
+                status: "failed"
+            })
+        }
+
+        if (error?.name === "ValidationError") {
+            const firstMessage = Object.values(error.errors || {})[0]?.message
+            return res.status(400).json({
+                message: firstMessage || "Please provide valid registration details.",
+                status: "failed"
+            })
+        }
+
+        return res.status(500).json({
+            message: "Registration failed due to server error. Please try again.",
+            status: "failed"
+        })
     }
 }
 
