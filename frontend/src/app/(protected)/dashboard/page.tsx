@@ -148,8 +148,8 @@ export default function DashboardPage() {
               <div className="text-3xl font-bold tracking-tight mb-1">${(balances[acc._id] || 0).toFixed(2)} {acc.currency || 'USD'}</div>
               <div className="text-xs opacity-90 font-mono break-all">{acc._id}</div>
               <div className="mt-4 flex items-center gap-2">
-                <button onClick={() => setDepositFor(acc._id)} className="btn-primary hover:shadow-soft" title="Add funds to this account">Add Funds</button>
-                <button onClick={() => removeAccount(acc._id)} className="btn-secondary hover:shadow-soft">Delete</button>
+                <button onClick={() => setDepositFor(acc._id)} className="btn-success hover:shadow-soft" title="Add funds to this account">Add Funds</button>
+                <button onClick={() => removeAccount(acc._id)} className="btn-danger hover:shadow-soft" title="Close this account">Delete</button>
               </div>
             </div>
           ))}

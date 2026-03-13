@@ -26,6 +26,14 @@ html, body, :root {
   @apply btn bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-100;
 }
 
+.btn-success {
+  @apply btn bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm disabled:opacity-60 disabled:pointer-events-none;
+}
+
+.btn-danger {
+  @apply btn bg-rose-600 text-white hover:bg-rose-700 shadow-sm disabled:opacity-60 disabled:pointer-events-none;
+}
+
 .nav-link {
   @apply text-sm text-slate-700 hover:text-slate-900 transition-colors dark:text-neutral-300 dark:hover:text-white;
 }
